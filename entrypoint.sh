@@ -12,8 +12,6 @@ if [[ -z "${GITHUB_TOKEN}" ]]; then
 fi
 
 # check if tag already exists
-tag_exists="false"
-echo "$(git tag -l)"
 if [ $(git tag -l "$TAG") ]; then
     echo "Tag $TAG already exists"
     exit 1
@@ -25,18 +23,11 @@ echo "Git repo: $git_refs_url"
 
 echo "**pushing tag $TAG to repo $GITHUB_REPOSITORY"
 
-# create new tag
-reponse=$(curl -s -X POST $git_refs_url -H "Authorization: token $GITHUB_TOKEN" -d @- <<EOF
-{ "ref": "refs/tags/$TAG", "sha": "$GITHUB_SHA"}
-EOF
-)
 response=$(curl -s -X POST $git_refs_url -H "Authorization: token $GITHUB_TOKEN" -d @- <<EOF
 { "ref": "refs/tags/$TAG", "sha": "$GITHUB_SHA"}
 EOF
 )
-echo "My response is $response"
 status=$(echo "$response" | jq -r '.status // empty')
-echo "Status code is $status"
 
 if [ "$status" == "422" ]; then
 	echo "Tag already exists. Skipping creation."

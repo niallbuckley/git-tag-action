@@ -13,6 +13,7 @@ fi
 
 # check if tag already exists
 tag_exists="false"
+echo "$(git tag -l)"
 if [ $(git tag -l "$TAG") ]; then
     echo "Tag $TAG already exists"
     exit 1

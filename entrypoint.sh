@@ -14,7 +14,8 @@ fi
 # check if tag already exists
 tag_exists="false"
 if [ $(git tag -l "$TAG") ]; then
-    tag_exists="true"
+    echo "Tag $TAG already exists"
+    exit 1
 fi
 
 # push the tag to github

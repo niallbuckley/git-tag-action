@@ -39,15 +39,11 @@ then
 EOF
 else
   # create new tag
-  reponse=curl -s -X POST $git_refs_url \
-  -H "Authorization: token $GITHUB_TOKEN" \
-  -d @- << EOF
-
-  {
-    "ref": "refs/tags/$TAG",
-    "sha": "$GITHUB_SHA"
-  }
+  reponse=curl -s -X POST $git_refs_url -H "Authorization: token $GITHUB_TOKEN" -d @- << EOF
+{ "ref": "refs/tags/$TAG", "sha": "$GITHUB_SHA" }
 EOF
+status=$(echo "$response" | jq -r '.status // empty')
+echo "Status code is $status"
 fi
 
 status=$(echo "$response" | jq -r '.status // empty')

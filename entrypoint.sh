@@ -38,7 +38,7 @@ then
 EOF
 else
   # create new tag
-  curl -s -X POST $git_refs_url \
+  reponse=$(curl -s -X POST $git_refs_url \
   -H "Authorization: token $GITHUB_TOKEN" \
   -d @- << EOF
 
@@ -47,4 +47,15 @@ else
     "sha": "$GITHUB_SHA"
   }
 EOF
+)
+ status=$(echo "$response" | jq -r '.status // empty')
+  if [ "$status" == "422" ]; then
+  	echo "Tag already exists. Skipping creation."
+	exit 1
+  elif [ -n "$status" ]; then
+  	echo "GitHub API error: $(echo "$response" | jq -r '.message') (status: $status)"
+  	exit 1
+  else
+  	echo "Tag created successfully: $(echo "$response" | jq -r '.ref')"
+  fi
 fi

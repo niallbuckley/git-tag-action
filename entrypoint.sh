@@ -30,6 +30,10 @@ reponse=$(curl -s -X POST $git_refs_url -H "Authorization: token $GITHUB_TOKEN" 
 { "ref": "refs/tags/$TAG", "sha": "$GITHUB_SHA"}
 EOF
 )
+response=$(curl -X POST $git_refs_url -H "Authorization: Bearer $GITHUB_TOKEN" -d @- <<EOF
+{ "ref": "refs/tags/testing", "sha": "$GITHUB_SHA"}
+EOF
+)
 echo "My response is $response"
 status=$(echo "$response" | jq -r '.status // empty')
 echo "Status code is $status"

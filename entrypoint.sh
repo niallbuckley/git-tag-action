@@ -49,6 +49,7 @@ else
 EOF
 )
  status=$(echo "$response" | jq -r '.status // empty')
+ echo "Status code is $status"
   if [ "$status" == "422" ]; then
   	echo "Tag already exists. Skipping creation."
 	exit 1
